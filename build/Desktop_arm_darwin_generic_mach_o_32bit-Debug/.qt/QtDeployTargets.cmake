@@ -1,0 +1,4 @@
+set(__QT_DEPLOY_TARGET_chat_FILE /Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/chat.app/Contents/MacOS/chat)
+set(__QT_DEPLOY_TARGET_chat_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_servidor_FILE /Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/servidor)
+set(__QT_DEPLOY_TARGET_servidor_TYPE EXECUTABLE)

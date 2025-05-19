@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>stickers/sticker2.png</file>
+        <file>stickers/sticker3.png</file>
+        <file>stickers/sticker1.png</file>
+        <file>stickers/sticker4.png</file>
+        <file>stickers/sticker5.png</file>
+        <file>stickers/sticker6.png</file>
+        <file>stickers/sticker7.png</file>
+        <file>stickers/sticker8.png</file>
+        <file>stickers/sticker9.png</file>
+    </qresource>
+</RCC>

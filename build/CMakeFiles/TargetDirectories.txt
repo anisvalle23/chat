@@ -1,0 +1,12 @@
+/Users/anavalle/Desktop/chat/build/CMakeFiles/chat.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/servidor.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/edit_cache.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/rebuild_cache.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/list_install_components.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/install.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/install/local.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/install/strip.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/chat_autogen_timestamp_deps.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/chat_autogen.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/servidor_autogen_timestamp_deps.dir
+/Users/anavalle/Desktop/chat/build/CMakeFiles/servidor_autogen.dir

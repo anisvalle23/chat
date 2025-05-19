@@ -1,0 +1,12 @@
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/chat.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/servidor.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/edit_cache.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/rebuild_cache.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/list_install_components.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/install.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/install/local.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/install/strip.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/chat_autogen_timestamp_deps.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/chat_autogen.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/servidor_autogen_timestamp_deps.dir
+/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/CMakeFiles/servidor_autogen.dir

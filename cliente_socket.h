@@ -33,4 +33,4 @@ private:
     void reconectar();
 };
 
-#endif // CLIENTE_SOCKET_H
+#endif

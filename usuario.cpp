@@ -32,7 +32,7 @@ bool Usuario::guardarEnArchivo(const QString &rutaArchivo) const {
         << edad << ","
         << pregunta << ","
         << respuesta << ","
-        << "0" << "\n";  // Estado desconectado por defecto
+        << "0" << "\n";
 
     file.close();
     return true;
@@ -101,7 +101,7 @@ void Usuario::actualizarEstadoEnArchivo(const QString &usuarioBuscado, bool cone
             QStringList partes = linea.split(",");
 
             if (partes.size() >= 8 && partes[0] == usuarioBuscado) {
-                while (partes.size() < 9) partes << "0";  // Asegura que tenga campo de estado
+                while (partes.size() < 9) partes << "0";
                 partes[8] = conectado ? "1" : "0";
                 linea = partes.join(",");
             }

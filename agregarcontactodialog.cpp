@@ -150,12 +150,11 @@ void AgregarContactoDialog::updateSelectionStyle()
         QWidget *widget = userList->itemWidget(item);
 
         if (item->isSelected()) {
-            widget->setStyleSheet("background-color: #f0f0f0;"); // solo fondo gris claro
+            widget->setStyleSheet("background-color: #f0f0f0;");
         } else {
             widget->setStyleSheet("background-color: transparent;");
         }
 
-        // Quitar cualquier sombra por si quedó de antes
         widget->setGraphicsEffect(nullptr);
     }
 }

@@ -39,13 +39,13 @@ void ClienteSocket::reconectar()
 
 void ClienteSocket::setNombreUsuario(const QString &usuario)
 {
-    nombreUsuario = usuario.trimmed();  // Asegura que no haya espacios
+    nombreUsuario = usuario.trimmed();
 }
 
 void ClienteSocket::enviarMensaje(const QString &mensaje)
 {
     if (socket->state() == QAbstractSocket::ConnectedState) {
-        QString mensajeConSalto = mensaje.trimmed() + "\n";  // Asegura mensaje limpio
+        QString mensajeConSalto = mensaje.trimmed() + "\n";
         socket->write(mensajeConSalto.toUtf8());
         socket->flush();
         qDebug() << "📤 Enviado al servidor:" << mensajeConSalto;
@@ -60,9 +60,8 @@ void ClienteSocket::onReadyRead()
         QString mensaje = QString::fromUtf8(socket->readLine()).trimmed();
         qDebug() << "📥 Recibido:" << mensaje;
 
-        // 🔒 Filtrar comandos internos
+
         if (mensaje.startsWith("ENLINEA:") || mensaje == "ESTADO?" || mensaje.startsWith("DESCONECTADO:")) {
-            // Ignora comandos internos
             qDebug() << "🔃 Comando interno recibido, ignorado.";
             continue;
         }
@@ -74,7 +73,7 @@ void ClienteSocket::onReadyRead()
                 QStringList partes = par.split(",");
                 if (partes.size() == 2) {
                     QString usuario = partes[0].trimmed();
-                    QString estado = partes[1].trimmed();  // "1" o "0"
+                    QString estado = partes[1].trimmed();
                     mapa[usuario] = estado;
                     qDebug() << "👤 Estado recibido ->" << usuario << ":" << estado;
                 }
@@ -82,7 +81,6 @@ void ClienteSocket::onReadyRead()
             emit estadoUsuariosActualizado(mapa);
         }
         else if (mensaje.contains(":")) {
-            // Mensaje válido tipo "usuario: hola"
             QString remitente = mensaje.section(":", 0, 0).trimmed();
             QString contenido = mensaje.section(":", 1).trimmed();
             emit mensajeRecibido(remitente, contenido);

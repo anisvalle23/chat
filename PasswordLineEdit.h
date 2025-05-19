@@ -16,4 +16,4 @@ protected:
     void leaveEvent(QEvent *event) override;
 };
 
-#endif // PASSWORDLINEEDIT_H
+#endif

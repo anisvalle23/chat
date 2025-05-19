@@ -15,4 +15,4 @@ private:
     static QString archivoRuta(const QString& usuario);
 };
 
-#endif // GESTORNOLEIDOS_H
+#endif

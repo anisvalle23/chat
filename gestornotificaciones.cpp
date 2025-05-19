@@ -30,7 +30,7 @@ void GestorNotificaciones::guardarNotificaciones(const QString& usuario, const Q
     QString carpeta = "/Users/anavalle/Desktop/chat/notificaciones";
     QDir dir;
     if (!dir.exists(carpeta)) {
-        dir.mkpath(carpeta);  // 🔧 Crea carpeta si no existe
+        dir.mkpath(carpeta);
     }
 
     QString ruta = carpeta + "/notificaciones_" + usuario + ".txt";
@@ -59,13 +59,13 @@ void GestorNotificaciones::reiniciar(const QString& usuario, const QString& remi
     guardarNotificaciones(usuario, conteo);
 }
 
-// 🆕 NUEVA: obtener número de notificaciones específicas
+
 int GestorNotificaciones::obtenerConteo(const QString& usuario, const QString& remitente) {
     QMap<QString, int> conteo = leerNotificaciones(usuario);
     return conteo.value(remitente, 0);
 }
 
-// 🆕 NUEVA: verificar si el archivo existe
+
 bool GestorNotificaciones::existeArchivo(const QString& usuario) {
     QString ruta = "/Users/anavalle/Desktop/chat/notificaciones/notificaciones_" + usuario + ".txt";
     return QFile::exists(ruta);

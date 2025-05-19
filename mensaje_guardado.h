@@ -7,14 +7,10 @@
 struct MensajeGuardado {
     QWidget* widget;
     int posicion;
-    QString contenido;  // ✅ NUEVO: texto del mensaje eliminado
-
-    // Constructor por defecto
+    QString contenido;
     MensajeGuardado() : widget(nullptr), posicion(-1), contenido("") {}
-
-    // Constructor que usas al apilar
     MensajeGuardado(QWidget* w, int pos, const QString& cont)
         : widget(w), posicion(pos), contenido(cont) {}
 };
 
-#endif // MENSAJE_GUARDADO_H
+#endif

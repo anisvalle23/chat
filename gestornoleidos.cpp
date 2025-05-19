@@ -4,14 +4,12 @@
 #include <QDir>
 #include <QDebug>
 
-// 📁 Devuelve la ruta del archivo según el usuario actual
 QString GestorNoLeidos::archivoRuta(const QString& usuario) {
     QString baseDir = "/Users/anavalle/Desktop/chat/noleidos/";
     QDir().mkpath(baseDir); // Asegura que exista el directorio
     return baseDir + "noleidos_" + usuario.toLower() + ".txt";
 }
 
-// 📨 Registra un nuevo mensaje no leído para un contacto
 void GestorNoLeidos::registrar(const QString& usuario, const QString& contacto, const QString& mensaje) {
     QString ruta = archivoRuta(usuario);
     QFile file(ruta);
@@ -26,15 +24,13 @@ void GestorNoLeidos::registrar(const QString& usuario, const QString& contacto, 
     }
 }
 
-// 📖 Obtiene todos los mensajes no leídos para un contacto
 QStringList GestorNoLeidos::obtenerMensajes(const QString& usuario, const QString& contacto) {
     QStringList mensajes;
     QString ruta = archivoRuta(usuario);
     QFile file(ruta);
 
-    // ✅ Evita error si el archivo aún no existe
     if (!file.exists()) {
-        return mensajes; // Vacío sin errores
+        return mensajes;
     }
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -54,12 +50,12 @@ QStringList GestorNoLeidos::obtenerMensajes(const QString& usuario, const QStrin
     return mensajes;
 }
 
-// 🔢 Cuenta la cantidad de mensajes no leídos
+
 int GestorNoLeidos::contarMensajes(const QString& usuario, const QString& contacto) {
     return obtenerMensajes(usuario, contacto).size();
 }
 
-// 🧹 Limpia los mensajes no leídos de un contacto específico
+
 void GestorNoLeidos::limpiar(const QString& usuario, const QString& contacto) {
     QString ruta = archivoRuta(usuario);
     QFile file(ruta);

@@ -1,4 +1,1 @@
-Cris,Cristopher Omar Pineda,cris@gmail.com,Pined1,/Users/anavalle/Desktop/avatars/cris.PNG,26,Nombre de tu primera mascota,Fuither,1
-Monic,Monica Bustamante,monic@gmail.com,Monic1,/Users/anavalle/Desktop/avatars/Monica.PNG,19,Ciudad de nacimiento,San pedro sula,1
-Nicole,Nicole Padilla,nic@gmail.com,Nicol1,/Users/anavalle/Desktop/avatars/nicole.PNG,20,Nombre de tu primera mascota,sisi,1
 Ana,Ana Gab,a@gmail.con,Monge1,/Users/anavalle/Desktop/avatars/Ana.PNG,20,Nombre de tu primera mascota,Boy,1

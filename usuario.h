@@ -13,12 +13,12 @@ public:
             int edad,
             const QString &pregunta,
             const QString &respuesta,
-            bool estadoConectado = false);  // ✅ nuevo parámetro opcional
+            bool estadoConectado = false);
 
     bool guardarEnArchivo(const QString &rutaArchivo) const;
     static bool existeUsuario(const QString &rutaArchivo, const QString &usuarioBuscado);
 
-    // --- 🔥 GETTERS 🔥 ---
+
     QString getUsuario() const { return usuario; }
     QString getNombre() const { return nombre; }
     QString getCorreo() const { return correo; }
@@ -29,14 +29,14 @@ public:
     QString getRespuesta() const { return respuesta; }
     bool getEstado() const { return estadoConectado; }
 
-    // --- 🔧 SETTERS NUEVOS 🔧 ---
+
     void setAvatar(const QString &nuevaRuta) { avatar = nuevaRuta; }
     void setNombre(const QString &nuevoNombre) { nombre = nuevoNombre; }
     void setUsuario(const QString &nuevoUsuario) { usuario = nuevoUsuario; }
     void setContrasena(const QString &nuevaContrasena) { contrasena = nuevaContrasena; }
     void setEstado(bool nuevoEstado) { estadoConectado = nuevoEstado; }
 
-    // ✅ Corrección aquí
+
     static void actualizarEstadoEnArchivo(const QString &usuarioBuscado, bool conectado);
     static bool sonContactosMutuos(const QString &usuario1, const QString &usuario2);
 
@@ -52,4 +52,4 @@ private:
     bool estadoConectado = false;
 };
 
-#endif // USUARIO_H
+#endif

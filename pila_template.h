@@ -30,7 +30,7 @@ public:
     }
 
     T desapilar() {
-        if (estaVacia()) return T();  // Retorna objeto por defecto si está vacía
+        if (estaVacia()) return T();
         NodoPila<T>* temp = cima;
         T dato = temp->dato;
         cima = cima->siguiente;
@@ -43,4 +43,4 @@ public:
     }
 };
 
-#endif // PILA_TEMPLATE_H
+#endif

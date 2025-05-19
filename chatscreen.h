@@ -25,8 +25,8 @@ class ChatScreen : public QWidget
 public:
     explicit ChatScreen(QWidget *parent = nullptr);
     void setContacto(const QString &nombre, const QString &avatarPath);
-    void setUsuarioActual(const QString &usuario); // ← NUEVO
-    void cargarMensajesDesdeArchivo(); // ← NUEVO
+    void setUsuarioActual(const QString &usuario);
+    void cargarMensajesDesdeArchivo();
     void mostrarMensaje(const QString& mensaje, bool enviadoPorMi);
     void setClienteSocket(ClienteSocket *socket);
     void limpiarChat();
@@ -34,59 +34,40 @@ public:
     bool contactoMutuo = true;
     QFrame *bloqueoOverlay = nullptr;
     static QString nombreArchivoChat(const QString &usuario1, const QString &usuario2);
-    void recibirMensaje(const QString& mensaje);  // manejador de sockets
+    void recibirMensaje(const QString& mensaje);
     QString getContactoActual() const;
-        void setVentanaPrincipal(ChatWindow *ventana); // Nuevo método
+        void setVentanaPrincipal(ChatWindow *ventana);
 
 private slots:
-    // void onEnviarClicked();  // conectado al botón "Enviar"
     void buscarMensajes(const QString &palabra);
     void navegarResultado(int direccion);
     void centrarMensaje(QWidget *mensaje);
 
 
 private:
-    // 👤 Encabezado
+
     QLabel *contactNameLabel;
     QLabel *avatarLabel;
-
-    // 💬 Mensajes
     QVBoxLayout *messagesLayout;
     QWidget *messagesWidget;
     QScrollArea *scrollArea;
-
-    // 📝 Entrada y botones
     QLineEdit *messageInput;
     QPushButton *sendButton;
-
-    // 🗆 Stickers
     QWidget *stickerPopup;
     void crearGaleriaStickers();
-
-    // 🧱 Deshacer mensaje eliminado con posición exacta
     Pila<MensajeGuardado> historialMensajes;
-
-    // 👤 Usuario actual
-    QString usuarioActual; // ← NUEVO
-    QString contactoActual; // ← NUEVO: Nombre del contacto
-
-    // Funciones principales
-    void deshacerUltimoMensaje();       // ↩️ Restaurar último mensaje eliminado
-    void eliminarMensaje(QWidget *msg); // ❌ Eliminar mensaje (con confirmación)
-
-    // Funciones auxiliares
-    void agregarContextMenu(QWidget *msgWidget); // Para mostrar botón de eliminar al hacer clic
-
-
+    QString usuarioActual;
+    QString contactoActual;
+    void deshacerUltimoMensaje();
+    void eliminarMensaje(QWidget *msg);
+    void agregarContextMenu(QWidget *msgWidget);
     ClienteSocket* clienteSocket;
-
     QTimer *timerActualizarChat;
     QDateTime ultimaModificacionArchivo;
     void verificarActualizacionArchivo();
     QLineEdit *mensajeEdit;
     QPushButton *botonEnviar;
     void mostrarDialogoContactoNoAgregado();
-
     QWidget *panelBusqueda;
     QLineEdit *buscadorLineEdit;
     QPushButton *btnAnterior;
@@ -96,7 +77,6 @@ private:
     QPushButton *btnMostrarBusqueda;
     QList<QLabel*> mensajesResaltados;
     int indiceActual;
-
     ChatWindow *ventanaPrincipal = nullptr;
 
 

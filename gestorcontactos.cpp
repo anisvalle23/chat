@@ -4,7 +4,6 @@
 #include <QDir>
 
 QString GestorContactos::rutaArchivo(const QString& usuario) {
-    // Asegura que la carpeta ~/chat/contactos/ exista
     QDir dir(QDir::homePath() + "/chat/contactos");
     if (!dir.exists())
         dir.mkpath(".");

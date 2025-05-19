@@ -32,7 +32,7 @@ QList<Usuario> OrdenadorContactos::ordenar(const QList<Usuario>& contactos, cons
                 return count;
             };
 
-            return contarLineas(b.getUsuario()) < contarLineas(a.getUsuario()); // más mensajes arriba
+            return contarLineas(b.getUsuario()) < contarLineas(a.getUsuario());
         });
 
     } else if (criterio == "fecha") {
@@ -61,14 +61,14 @@ QList<Usuario> OrdenadorContactos::ordenar(const QList<Usuario>& contactos, cons
                 return ultimaHora;
             };
 
-            return obtenerUltimaHora(b.getUsuario()) > obtenerUltimaHora(a.getUsuario()); // más reciente primero
+            return obtenerUltimaHora(b.getUsuario()) > obtenerUltimaHora(a.getUsuario());
         });
 
     } else if (criterio == "reciente_agregado") {
-        std::reverse(copia.begin(), copia.end());  // invertir orden del archivo
+        std::reverse(copia.begin(), copia.end());
 
     } else if (criterio == "normal") {
-        // no se modifica la lista
+
     }
 
     return copia;

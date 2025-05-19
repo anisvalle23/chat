@@ -7,4 +7,4 @@ public:
     listaenlazada();
 };
 
-#endif // LISTAENLAZADA_H
+#endif

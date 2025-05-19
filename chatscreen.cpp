@@ -29,7 +29,6 @@ ChatScreen::ChatScreen(QWidget *parent)
     mainLayout->setContentsMargins(10, 10, 10, 10);
     mainLayout->setSpacing(10);
 
-    // 🧩 LAYOUT SUPERIOR: Avatar + Nombre + Lupa a la derecha
     QHBoxLayout *headerLayout = new QHBoxLayout();
     avatarLabel = new QLabel();
     avatarLabel->setFixedSize(40, 40);
@@ -38,7 +37,6 @@ ChatScreen::ChatScreen(QWidget *parent)
     contactNameLabel = new QLabel("Nombre del contacto");
     contactNameLabel->setStyleSheet("font-size: 16px; font-weight: bold; margin-left: 10px;");
 
-    // 🔍 Lupa
     btnMostrarBusqueda = new QPushButton("🔍");
     btnMostrarBusqueda->setFixedSize(28, 28);
     btnMostrarBusqueda->setStyleSheet("border: none; font-size: 16px;");
@@ -46,12 +44,11 @@ ChatScreen::ChatScreen(QWidget *parent)
 
     headerLayout->addWidget(avatarLabel);
     headerLayout->addWidget(contactNameLabel);
-    headerLayout->addStretch();                  // ⬅️ empuja la lupa a la derecha
-    headerLayout->addWidget(btnMostrarBusqueda); // ⬅️ lupa al borde derecho
+    headerLayout->addStretch();
+    headerLayout->addWidget(btnMostrarBusqueda);
 
     mainLayout->addLayout(headerLayout);
 
-    // 🔎 Panel de búsqueda oculto al inicio
     panelBusqueda = new QWidget();
     panelBusqueda->setVisible(false);
 
@@ -72,7 +69,6 @@ ChatScreen::ChatScreen(QWidget *parent)
 
     mainLayout->addWidget(panelBusqueda);
 
-    // 💬 Área de mensajes con scroll
     scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
     scrollArea->setStyleSheet("background-color: white; border: none;");
@@ -83,18 +79,17 @@ ChatScreen::ChatScreen(QWidget *parent)
     scrollArea->setWidget(messagesWidget);
     mainLayout->addWidget(scrollArea);
 
-    // Lupa: muestra el panel
     connect(btnMostrarBusqueda, &QPushButton::clicked, this, [=]() {
         panelBusqueda->setVisible(true);
     });
 
-    // Botón X: cierra y limpia
+
     connect(btnCerrarBusqueda, &QPushButton::clicked, this, [=]() {
         panelBusqueda->setVisible(false);
         buscadorLineEdit->clear();
         resultadoLabel->setText("0 resultados");
 
-        // 🔁 Restaurar estilos originales
+
         for (QObject *obj : messagesWidget->children()) {
             QWidget *bubble = qobject_cast<QWidget*>(obj);
             if (!bubble) continue;
@@ -112,12 +107,10 @@ ChatScreen::ChatScreen(QWidget *parent)
         indiceActual = -1;
     });
 
-    // Enter en input: buscar
     connect(buscadorLineEdit, &QLineEdit::returnPressed, this, [=]() {
         buscarMensajes(buscadorLineEdit->text().trimmed());
     });
 
-    // Flechas: navegar
     connect(btnAnterior, &QPushButton::clicked, this, [=]() {
         navegarResultado(-1);
     });
@@ -156,8 +149,6 @@ ChatScreen::ChatScreen(QWidget *parent)
         stickerPopup->show();
     });
 
-    // 👇 Mostrar mensaje en pantalla al enviar
-    // 👇 Mostrar mensaje en pantalla al enviar
     connect(sendButton, &QPushButton::clicked, this, [=]() {
         QString texto = messageInput->text().trimmed();
         if (!texto.isEmpty()) {
@@ -165,7 +156,7 @@ ChatScreen::ChatScreen(QWidget *parent)
 
             QLabel *messageLabel = new QLabel(texto);
             messageLabel->setStyleSheet("background-color: #800020; color: white; padding: 8px 12px; border-radius: 10px;");
-            messageLabel->setMaximumWidth(this->width() * 0.80); // 👈 Esta línea es la que sí funciona
+            messageLabel->setMaximumWidth(this->width() * 0.80);
             messageLabel->setProperty("originalStyle", messageLabel->styleSheet());
             messageLabel->setWordWrap(true);
 
@@ -213,19 +204,17 @@ ChatScreen::ChatScreen(QWidget *parent)
                 scrollArea->verticalScrollBar()->setValue(scrollArea->verticalScrollBar()->maximum());
             });
 
-            // 👇 Enviar el mensaje por socket
             if (clienteSocket) {
                 clienteSocket->enviarMensaje(texto);
             }
         }
     });
 
-    // Solo dejarlo nulo; se establecerá desde LoginWindow
     clienteSocket = nullptr;
 
     timerActualizarChat = new QTimer(this);
     connect(timerActualizarChat, &QTimer::timeout, this, &ChatScreen::verificarActualizacionArchivo);
-    timerActualizarChat->start(1000); // Cada 3 segundos
+    timerActualizarChat->start(1000);
 }
 
 
@@ -234,7 +223,6 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
     contactoActual = nombre;
     contactNameLabel->setText(nombre);
 
-    // Avatar redondo
     QPixmap pixmap(avatarPath);
     if (!pixmap.isNull()) {
         QPixmap redondo(40, 40);
@@ -248,10 +236,8 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
         avatarLabel->setPixmap(redondo);
     }
 
-    // Primero verifica si ya son contactos mutuos
     bool ambosAgregados = Usuario::sonContactosMutuos(usuarioActual, contactoActual);
 
-    // Si ya son mutuos, limpiar el archivo de eliminados
     QString rutaEliminados = "/Users/anavalle/Desktop/chat/eliminados/eliminados_" + usuarioActual + ".txt";
     if (ambosAgregados) {
         QFile archivo(rutaEliminados);
@@ -276,7 +262,6 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
         }
     }
 
-    //sii NO son mutuos, verificar si fue eliminado
     bool eliminadoPorElOtro = false;
     if (!ambosAgregados) {
         QFile archivoEliminado(rutaEliminados);
@@ -298,13 +283,11 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
                              "Este contacto te ha eliminado. El historial de chat fue borrado.");
     }
 
-    // Limpia mensajes
     while (QLayoutItem* item = messagesLayout->takeAt(0)) {
         delete item->widget();
         delete item;
     }
 
-    // Mostrar interfaz bloqueada si no son mutuos
     if (!ambosAgregados) {
         messageInput->setEnabled(false);
         sendButton->setEnabled(false);
@@ -345,7 +328,6 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
             QString nombreOrigen = "";
             QString avatarOrigen = "";
 
-            // 🔍 Leer nombre y avatar del usuario actual desde usuarios.txt
             QString rutaUsuarios = "/Users/anavalle/Desktop/chat/usuarios.txt";
             QFile ufile(rutaUsuarios);
             if (ufile.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -367,7 +349,7 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
                 return;
             }
 
-            // 🛡️ Verificar si ya se ha enviado la solicitud
+
             bool yaEnviada = false;
             QFile archivoCheck(rutaSolicitud);
             if (archivoCheck.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -387,7 +369,6 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
                 return;
             }
 
-            // ✅ Escribir la nueva solicitud con avatar incluido
             QFile archivo(rutaSolicitud);
             if (archivo.open(QIODevice::Append | QIODevice::Text)) {
                 QTextStream out(&archivo);
@@ -396,7 +377,6 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
 
                 QMessageBox::information(this, "Solicitud enviada", "Tu solicitud fue enviada correctamente.");
 
-                // 🧠 Ocultar el botón y mostrar un mensaje en el chat
                 btnEnviarSolicitud->hide();
 
                 QLabel *confirmacion = new QLabel("📨 Solicitud enviada. Esperando respuesta...");
@@ -414,7 +394,6 @@ void ChatScreen::setContacto(const QString &nombre, const QString &avatarPath)
         return;
     }
 
-    // Si son mutuos, habilitar chat
     messageInput->setEnabled(true);
     sendButton->setEnabled(true);
     cargarMensajesDesdeArchivo();
@@ -588,7 +567,6 @@ void ChatScreen::deshacerUltimoMensaje() {
             qDebug() << "❌ No se pudo abrir el archivo para escritura.";
         }
 
-        // ⚡ Recargar para reflejar cambios visuales
         cargarMensajesDesdeArchivo();
     } else {
         qDebug() << "⚠️ Pila de mensajes eliminados vacía.";
@@ -619,7 +597,7 @@ QString ChatScreen::nombreArchivoChat(const QString &usuario1, const QString &us
 
     if (nombreA.isEmpty() || nombreB.isEmpty()) {
         qWarning() << "❗ No se puede crear el archivo: uno de los nombres está vacío.";
-        return QString(); // ERROR: no se crea archivo
+        return QString();
     }
 
     if (nombreA > nombreB)
@@ -629,7 +607,7 @@ QString ChatScreen::nombreArchivoChat(const QString &usuario1, const QString &us
 
     QDir dir(rutaCarpeta);
     if (!dir.exists()) {
-        dir.mkpath(".");  // CREA carpeta si no existe
+        dir.mkpath(".");
     }
 
     return rutaCarpeta + "/" + nombreA + "_" + nombreB + ".txt";
@@ -638,7 +616,7 @@ QString ChatScreen::nombreArchivoChat(const QString &usuario1, const QString &us
 void ChatScreen::setUsuarioActual(const QString &usuario) {
     usuarioActual = usuario;
     if (clienteSocket) {
-        clienteSocket->setNombreUsuario(usuario);  // ⬅️ ¡Importante!
+        clienteSocket->setNombreUsuario(usuario);
     }
 }
 
@@ -647,7 +625,6 @@ void ChatScreen::cargarMensajesDesdeArchivo() {
     QFile archivo(ruta);
     if (!archivo.exists()) return;
 
-    // 🧹 Limpiar mensajes anteriores
     while (QLayoutItem* item = messagesLayout->takeAt(0)) {
         if (QWidget* widget = item->widget()) {
             widget->deleteLater();
@@ -708,11 +685,11 @@ void ChatScreen::cargarMensajesDesdeArchivo() {
                 messageLabel->setWordWrap(true);
 
                 if (remitente == usuarioActual) {
-                    messageLabel->setMaximumWidth(this->width() * 0.80); // 👈 PRIMERO el máximo ancho
+                    messageLabel->setMaximumWidth(this->width() * 0.80);
                     messageLabel->setStyleSheet("background-color: #800020; color: white; padding: 8px 12px; border-radius: 10px;");
                     messageLabel->setProperty("originalStyle", messageLabel->styleSheet());
                 } else {
-                    messageLabel->setMaximumWidth(this->width() * 0.80); // 👈 este también
+                    messageLabel->setMaximumWidth(this->width() * 0.80);
                     messageLabel->setStyleSheet("background-color: #e0e0e0; color: black; padding: 8px 12px; border-radius: 10px;");
                     messageLabel->setProperty("originalStyle", messageLabel->styleSheet());
                 }
@@ -751,7 +728,6 @@ void ChatScreen::cargarMensajesDesdeArchivo() {
                     }
                     archivo.close();
 
-                    // Encontrar la línea a modificar
                     QLabel* label = bubbleWidget->findChild<QLabel*>();
                     if (!label) return;
 
@@ -766,16 +742,13 @@ void ChatScreen::cargarMensajesDesdeArchivo() {
                             QString remitente = match.captured(1).trimmed();
                             QString contenido = match.captured(2).trimmed();
 
-                            // 💬 Validar si coincide con el contenido actual del label
                             if (remitente == usuarioActual && contenido == contenidoWidget) {
-                                // ⚠️ Marcar como eliminado
                                 lineas[i] = remitente + " [" + QTime::currentTime().toString("hh:mm") + "]: [ELIMINADO]::" + contenido;
                                 break;
                             }
                         }
                     }
 
-                    // Escribir archivo con cambios
                     if (archivo.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
                         QTextStream out(&archivo);
                         for (const QString& l : lineas) {
@@ -784,12 +757,10 @@ void ChatScreen::cargarMensajesDesdeArchivo() {
                         archivo.close();
                     }
 
-                    // ✅ Apilar el mensaje eliminado para poder deshacerlo
                     int posicion = messagesLayout->indexOf(bubbleWidget);
                     QLabel* label2 = bubbleWidget->findChild<QLabel*>();
                     QString contenido = label2 ? label2->text().trimmed() : "";
                     historialMensajes.apilar(MensajeGuardado(bubbleWidget, posicion, contenido));
-                    // 🧹 Ocultar temporalmente el mensaje, se recargará por QTimer
                     bubbleWidget->hide();
                 }
             });
@@ -804,7 +775,6 @@ void ChatScreen::cargarMensajesDesdeArchivo() {
         });
     }
 
-    // ✅ Guardar el último mensaje leído
     if (!contactoActual.isEmpty() && !ultimoMensajeMostrado.isEmpty()) {
         QFile archivoLeidos("/Users/anavalle/Desktop/chat/leidos/leidos_" + usuarioActual + ".txt");
 
@@ -830,7 +800,6 @@ void ChatScreen::cargarMensajesDesdeArchivo() {
     }
 }
 void ChatScreen::recibirMensaje(const QString& mensaje) {
-    // Extraer remitente y contenido: "Anis [22:55]: mensaje"
     QRegularExpression re(R"((.+?)\s+\[\d{2}:\d{2}\]:\s+(.*))");
     QRegularExpressionMatch match = re.match(mensaje);
 
@@ -839,10 +808,9 @@ void ChatScreen::recibirMensaje(const QString& mensaje) {
         remitente = match.captured(1).trimmed();
         contenido = match.captured(2).trimmed();
     } else {
-        contenido = mensaje.trimmed();  // fallback
+        contenido = mensaje.trimmed();
     }
 
-    // 📝 Guardar en archivo
     QString ruta = nombreArchivoChat(usuarioActual, remitente);
     QFile archivo(ruta);
     if (archivo.open(QIODevice::Append | QIODevice::Text)) {
@@ -855,15 +823,12 @@ void ChatScreen::recibirMensaje(const QString& mensaje) {
     QString contactoRemitente = remitente.toLower();
     QString contactoActualActivo = contactoActual.toLower();
 
-    // ✅ Si no está en el chat activo, registrar mensaje no leído y notificación
     if (contactoRemitente != contactoActualActivo && ventanaPrincipal) {
         ventanaPrincipal->registrarMensajeNoLeido(contactoRemitente, mensaje);
 
-        // ✅ REGISTRA EN NOTIFICACIONES.TXT
         GestorNotificaciones::incrementar(usuarioActual, remitente);
     }
 
-    // 💬 Mostrar visualmente el mensaje
     QWidget *bubbleWidget = new QWidget();
     QLabel *messageLabel = new QLabel(contenido);
     messageLabel->setWordWrap(true);
@@ -899,12 +864,10 @@ void ChatScreen::setClienteSocket(ClienteSocket *socket)
     this->clienteSocket = socket;
 
     connect(clienteSocket, &ClienteSocket::mensajeRecibido, this, [=](const QString& remitente, const QString& mensaje) {
-        // ⚠️ Solo registrar si NO estás en el chat de ese contacto y el mensaje no es tuyo
         if (remitente != contactoActual && remitente != usuarioActual) {
             GestorNoLeidos::registrar(usuarioActual, remitente, mensaje);
         }
 
-        // Emitimos señal normal para manejar el mensaje si es necesario
         emit mensajeRecibido(remitente, mensaje);
     });
 }
@@ -918,20 +881,18 @@ void ChatScreen::verificarActualizacionArchivo() {
     if (modificacionActual > ultimaModificacionArchivo) {
         ultimaModificacionArchivo = modificacionActual;
 
-        // 🔁 Limpia los mensajes actuales
         QLayoutItem* item;
         while ((item = messagesLayout->takeAt(0)) != nullptr) {
             delete item->widget();
             delete item;
         }
 
-        // 📥 Recarga desde archivo
+
         cargarMensajesDesdeArchivo();
     }
 }
 
 void ChatScreen::limpiarChat() {
-    // Elimina todos los widgets del layout
     while (QLayoutItem* item = messagesLayout->takeAt(0)) {
         if (QWidget* widget = item->widget()) {
             widget->deleteLater();
@@ -963,7 +924,6 @@ void ChatScreen::mostrarDialogoContactoNoAgregado()
     btnCerrar->setCursor(Qt::PointingHandCursor);
 
 
-    // Botones horizontales
     QHBoxLayout *botonesLayout = new QHBoxLayout();
     botonesLayout->addStretch();
     botonesLayout->addWidget(btnSolicitud);
@@ -977,7 +937,6 @@ void ChatScreen::mostrarDialogoContactoNoAgregado()
     layout->addLayout(botonesLayout);
     layout->setContentsMargins(20, 20, 20, 20);
 
-    // Conexiones
     connect(btnCerrar, &QPushButton::clicked, dialogo, &QDialog::close);
 
     connect(btnEliminar, &QPushButton::clicked, this, [=]() {
@@ -1036,7 +995,6 @@ void ChatScreen::buscarMensajes(const QString &palabra) {
         QString texto = label->text();
         QString originalStyle = label->property("originalStyle").toString();
 
-        // Siempre restaurar el estilo original al principio
         if (!originalStyle.isEmpty()) {
             label->setStyleSheet(originalStyle);
         }
@@ -1060,19 +1018,16 @@ void ChatScreen::buscarMensajes(const QString &palabra) {
 void ChatScreen::navegarResultado(int direccion) {
     if (mensajesResaltados.isEmpty()) return;
 
-    // Restaurar estilo actual
     if (indiceActual >= 0 && indiceActual < mensajesResaltados.size()) {
         QLabel *actual = mensajesResaltados.at(indiceActual);
         QString originalStyle = actual->property("originalStyle").toString();
         actual->setStyleSheet(originalStyle);
     }
 
-    // Avanzar o retroceder
     indiceActual += direccion;
     if (indiceActual < 0) indiceActual = mensajesResaltados.count() - 1;
     if (indiceActual >= mensajesResaltados.count()) indiceActual = 0;
 
-    // Resaltar nuevo actual
     QLabel *nuevo = mensajesResaltados.at(indiceActual);
     QString nuevoOriginal = nuevo->property("originalStyle").toString();
     nuevo->setStyleSheet(nuevoOriginal + " background-color: yellow;");

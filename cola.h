@@ -15,7 +15,7 @@ class Cola {
 private:
     NodoCola<T>* frente;
     NodoCola<T>* final;
-    int contador;  // ✅ Contador interno para tamaño
+    int contador;
 
 public:
     Cola() : frente(nullptr), final(nullptr), contador(0) {}
@@ -32,7 +32,7 @@ public:
             final->siguiente = nuevo;
             final = nuevo;
         }
-        contador++;  // ✅ Incrementar tamaño
+        contador++;
     }
 
     bool desencolar(T& valor) {
@@ -42,7 +42,7 @@ public:
         frente = frente->siguiente;
         if (!frente) final = nullptr;
         delete temp;
-        contador--;  // ✅ Decrementar tamaño
+        contador--;
         return true;
     }
 
@@ -53,7 +53,7 @@ public:
     void limpiar() {
         T temp;
         while (desencolar(temp)) {}
-        contador = 0;  // ✅ Resetear contador
+        contador = 0;
     }
 
     bool frenteElemento(T& valor) const {
@@ -62,9 +62,9 @@ public:
         return true;
     }
 
-    int tamano() const {  // ✅ Método para obtener número de elementos
+    int tamano() const {
         return contador;
     }
 };
 
-#endif // COLA_H
+#endif

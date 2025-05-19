@@ -10,4 +10,4 @@ public:
     static QList<Usuario> ordenar(const QList<Usuario>& contactos, const QString& criterio, const QString& usuarioPrincipal);
 };
 
-#endif // ORDENADORCONTACTOS_H
+#endif

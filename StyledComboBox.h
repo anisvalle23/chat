@@ -16,12 +16,10 @@ protected:
         QStyleOptionComboBox opt;
         initStyleOption(&opt);
         QComboBox::paintEvent(event);
-
-        // Forzar color negro del texto seleccionado
         QPainter p(this);
         p.setPen(Qt::black);
         p.drawText(rect().adjusted(12, 0, -30, 0), Qt::AlignVCenter | Qt::AlignLeft, currentText());
     }
 };
 
-#endif // STYLEDCOMBOBOX_H
+#endif

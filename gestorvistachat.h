@@ -18,4 +18,4 @@ public:
     static QString obtenerEstadoDesdeArchivo(const QString& usuario);
 };
 
-#endif // GESTORVISTACHAT_H
+#endif

@@ -1,5 +1,5 @@
 #include "gestorvistachat.h"
-#include "gestornoleidos.h"  // ✅ Asegúrate de incluir esta cabecera
+#include "gestornoleidos.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -106,7 +106,7 @@ QWidget* GestorVistaChat::crearWidgetContacto(const Usuario& contacto,
     contadorLabel->setFixedSize(20, 20);
     contadorLabel->setVisible(false);
 
-    // ✅ Mostrar mensajes no leídos
+
     int mensajesNoLeidos = GestorNoLeidos::contarMensajes(usuarioActual, contacto.getUsuario());
     if (mensajesNoLeidos > 0) {
         contadorLabel->setText(QString::number(mensajesNoLeidos));

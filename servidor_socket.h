@@ -23,11 +23,10 @@ private slots:
     void clienteDesconectado();
 
 private:
-    QMap<QTcpSocket*, QString> clientes;      // socket → nombre de usuario
-    QSet<QString> usuariosConectados;         // nombres conectados actualmente
-
-    void enviarEstadoConectados();            // notifica a todos el estado actualizado
-    void actualizarEstadoEnArchivo(const QString &usuario, bool conectado); // 🔄 escribe en usuarios.txt
+    QMap<QTcpSocket*, QString> clientes;
+    QSet<QString> usuariosConectados;
+    void enviarEstadoConectados();
+    void actualizarEstadoEnArchivo(const QString &usuario, bool conectado);
 };
 
-#endif // SERVIDOR_SOCKET_H
+#endif

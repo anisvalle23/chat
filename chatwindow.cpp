@@ -38,11 +38,9 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
 
-    // ✅ Conecta la señal de actualización de estado de usuarios
     connect(clienteSocket, &ClienteSocket::estadoUsuariosActualizado,
             this, &ChatWindow::actualizarEstadosEnLista);
 
-    // --- PANEL LATERAL ---
     QWidget *sidePanel = new QWidget(this);
     sidePanel->setFixedWidth(70);
     sidePanel->setStyleSheet("background-color: #800020;");
@@ -92,13 +90,11 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     settingsButton->setStyleSheet(chatButton->styleSheet());
     sideLayout->addWidget(settingsButton, 0, Qt::AlignHCenter);
 
-    // STACK DE CONTENIDO
+
     contentStack = new QStackedWidget(this);
 
     chatScreen = new ChatScreen(this);
     contentStack->addWidget(chatScreen);
-
-    // Pantalla de Chat
     QWidget *chatHomeScreen = new QWidget(this);
     QHBoxLayout *contentLayout = new QHBoxLayout(chatHomeScreen);
     contentLayout->setContentsMargins(0, 0, 0, 0);
@@ -129,11 +125,11 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     topLeftLayout->addWidget(removeButton);
 
     QComboBox *ordenCombo = new QComboBox(leftPanel);
-    ordenCombo->addItem("Orden normal");                // index 0 → normal
-    ordenCombo->addItem("Alfabético");                  // index 1 → alfabetico
-    ordenCombo->addItem("Longitud del chat");           // index 2 → longitud
-    ordenCombo->addItem("Más reciente (mensaje)");      // index 3 → fecha
-    ordenCombo->addItem("Más reciente (agregado)");     // index 4 → reciente_agregado
+    ordenCombo->addItem("Orden normal");
+    ordenCombo->addItem("Alfabético");
+    ordenCombo->addItem("Longitud del chat");
+    ordenCombo->addItem("Más reciente (mensaje)");
+    ordenCombo->addItem("Más reciente (agregado)");
 
     ordenCombo->setStyleSheet("padding: 6px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px;");
     leftLayout->addWidget(ordenCombo);
@@ -171,8 +167,6 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
 )");
 
     leftLayout->addLayout(topLeftLayout);
-    // leftLayout->addWidget(searchField);
-
     solicitudesLabel = new QLabel("Solicitudes de contacto:", leftPanel);
     solicitudesLabel->setStyleSheet("font-weight: bold; margin-top: 10px;");
     solicitudesLabel->setVisible(false);
@@ -185,7 +179,6 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     leftLayout->addWidget(solicitudesList);
     leftLayout->addWidget(contactList);
 
-    // ✅ Marcar usuario como conectado en el archivo usuarios.txt
     QString rutaUsuarios = "/Users/anavalle/Desktop/chat/usuarios.txt";
     QFile file(rutaUsuarios);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -196,10 +189,10 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
             QStringList partes = linea.split(",");
 
             if (partes.size() == 8 && partes[0].trimmed() == usuario.getUsuario().trimmed()) {
-                partes << "1";  // Agregar campo estado si falta
+                partes << "1";
                 lineas << partes.join(",");
             } else if (partes.size() >= 9 && partes[0].trimmed() == usuario.getUsuario().trimmed()) {
-                partes[8] = "1";  // Actualizar estado a conectado
+                partes[8] = "1";
                 lineas << partes.join(",");
             } else {
                 lineas << linea;
@@ -215,27 +208,25 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
         }
     }
 
-    // Panel derecho (para chat o bienvenida)
     QWidget *rightPanel = new QWidget(chatHomeScreen);
     QVBoxLayout *rightSideLayout = new QVBoxLayout(rightPanel);
     rightSideLayout->setContentsMargins(0, 0, 0, 0);
     rightSideLayout->setSpacing(0);
 
-    // Widget de bienvenida (se podrá ocultar cuando se abra un chat)
-    welcomeWidget = new QWidget(rightPanel);  // Declarado en chatwindow.h
+
+    welcomeWidget = new QWidget(rightPanel);
     QVBoxLayout *centerLayout = new QVBoxLayout(welcomeWidget);
     centerLayout->setAlignment(Qt::AlignCenter);
     centerLayout->setContentsMargins(0, 0, 0, 0);
     centerLayout->setSpacing(20);
 
-    // Avatar grande
+
     QWidget *avatarContainer = new QWidget(welcomeWidget);
     QVBoxLayout *avatarLayout = new QVBoxLayout(avatarContainer);
     avatarLayout->setContentsMargins(0, 0, 0, 0);
     avatarLayout->setAlignment(Qt::AlignCenter);
 
-    // Imagen del avatar central (logoHome)
-    logoHome = new QLabel(avatarContainer);  // Declarado en chatwindow.h
+    logoHome = new QLabel(avatarContainer);
     logoHome->setFixedSize(150, 150);
 
     if (!avatarPixmap.isNull()) {
@@ -255,7 +246,7 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     avatarContainer->setLayout(avatarLayout);
 
     // Texto de bienvenida
-    welcomeText = new QLabel("Bienvenido, " + usuario.getNombre(), welcomeWidget);  // Declarado en chatwindow.h
+    welcomeText = new QLabel("Bienvenido, " + usuario.getNombre(), welcomeWidget);
     welcomeText->setAlignment(Qt::AlignCenter);
     welcomeText->setStyleSheet("font-size: 22px; color: #555; font-weight: bold;");
 
@@ -301,11 +292,9 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     menuLayout->setAlignment(Qt::AlignCenter);
     menuLayout->setSpacing(15);
 
-    // Agrega todos los botones anteriores
     for (auto btn : botones)
         menuLayout->addWidget(btn);
 
-    // Espacio y botón "Iniciar otra sesión"
     menuLayout->addSpacing(20);
 
     QPushButton *multiSesionBtn = new QPushButton("\u2795 Iniciar otra sesión");
@@ -314,14 +303,14 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
 
     menuWidget->setLayout(menuLayout);
 
-    // 👉 Conexión del botón para abrir una nueva instancia de la app
+
     connect(multiSesionBtn, &QPushButton::clicked, this, []() {
         QString ruta = "/Users/anavalle/Desktop/chat/build/Desktop_arm_darwin_generic_mach_o_32bit-Debug/chat.app/Contents/MacOS/chat";
         if (!QProcess::startDetached(ruta)) {
             QMessageBox::critical(nullptr, "Error", "No se pudo abrir una nueva sesión. Verifica que el ejecutable exista y tenga permisos.");
         }
     });
-    // Utilidad para crear vistas con "Volver"
+
     auto crearVistaConVolver = [&](const QString &titulo, QWidget *contenido, int regresarA = 0) {
         QWidget *w = new QWidget();
         QVBoxLayout *layout = new QVBoxLayout(w);
@@ -374,10 +363,8 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
             return;
         }
 
-        // Cambiar en memoria
         usuario.setAvatar(nuevoAvatar);
 
-        // Cambiar visualmente (en el panel lateral y pantalla de bienvenida)
         QPixmap nuevoPixmap(nuevoAvatar);
         if (!nuevoPixmap.isNull()) {
             QPixmap redondo(48, 48);
@@ -401,7 +388,6 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
             logoHome->setPixmap(redondoGrande);
         }
 
-        // Actualizar en usuarios.txt
         for (Usuario &u : usuariosTotales) {
             if (u.getUsuario() == usuario.getUsuario()) {
                 u.setAvatar(nuevoAvatar);
@@ -421,7 +407,7 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
                     << u.getEdad() << ","
                     << u.getPregunta() << ","
                     << u.getRespuesta() << ","
-                    << (u.getEstado() ? "1" : "0") << "\n";  // 👈 Aquí agregas el estado
+                    << (u.getEstado() ? "1" : "0") << "\n";
             }
             file.close();
         }
@@ -521,7 +507,7 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
                 out << u.getUsuario() << "," << u.getNombre() << "," << u.getCorreo() << ","
                     << u.getContrasena() << "," << u.getAvatar() << "," << u.getEdad() << ","
                     << u.getPregunta() << "," << u.getRespuesta() << ","
-                    << (u.getEstado() ? "1" : "0") << "\n";  // 👈 aquí agregas el estado
+                    << (u.getEstado() ? "1" : "0") << "\n";
             }
             file.close();
             QMessageBox::information(this, "Actualizado", "Datos guardados correctamente.");
@@ -552,7 +538,7 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     QLabel *preguntaLabel = new QLabel("Pregunta de seguridad:");
     preguntaLabel->setStyleSheet("font-weight: bold;");
 
-    QLabel *preguntaMostrada = new QLabel(usuario.getPregunta());  // ✅ Aquí usas la que tiene guardada
+    QLabel *preguntaMostrada = new QLabel(usuario.getPregunta());
     preguntaMostrada->setStyleSheet("padding: 8px; border: 1px solid #ccc; border-radius: 8px; background-color: #f0f0f0;");
 
     // Campo para responder
@@ -625,7 +611,7 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
                 out << u.getUsuario() << "," << u.getNombre() << "," << u.getCorreo() << ","
                     << u.getContrasena() << "," << u.getAvatar() << "," << u.getEdad() << ","
                     << u.getPregunta() << "," << u.getRespuesta() << ","
-                    << (u.getEstado() ? "1" : "0") << "\n";  // 👈 aquí agregas el estado
+                    << (u.getEstado() ? "1" : "0") << "\n";
             }
             file.close();
             QMessageBox::information(this, "Contraseña cambiada", "Tu contraseña ha sido actualizada correctamente.");
@@ -655,10 +641,9 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     connect(btnCerrarConfirmar, &QPushButton::clicked, this, [=]() {
         if (clienteSocket) {
             clienteSocket->enviarMensaje("DESCONECTADO:" + usuario.getUsuario());
-            clienteSocket->desconectar();  // ✅ Usamos método propio
+            clienteSocket->desconectar();
         }
 
-        // Actualizar archivo usuarios.txt → estado = 0
         QString archivoRuta = "/Users/anavalle/Desktop/chat/usuarios.txt";
         QFile file(archivoRuta);
 
@@ -671,7 +656,7 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
                 QStringList partes = linea.split(",");
 
                 if (partes.size() >= 9 && partes[0].trimmed() == usuario.getUsuario()) {
-                    partes[8] = "0";  // Desconectado
+                    partes[8] = "0";
                     linea = partes.join(",");
                 }
 
@@ -775,7 +760,6 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
             clienteSocket->desconectar();
         }
 
-        // Actualizar archivo usuarios.txt → estado = 0
         QString archivoRuta = "/Users/anavalle/Desktop/chat/usuarios.txt";
         QFile file(archivoRuta);
 
@@ -788,7 +772,7 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
                 QStringList partes = linea.split(",");
 
                 if (partes.size() >= 9 && partes[0].trimmed() == usuario.getUsuario()) {
-                    partes[8] = "0";  // Desconectado
+                    partes[8] = "0";
                     linea = partes.join(",");
                 }
 
@@ -818,22 +802,22 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
 
     cargarUsuariosDesdeArchivo();
     filtrarUsuariosDisponibles();
-    cargarContactosGuardados();       // 🟢 primero cargar desde archivo
-    cargarSolicitudesPendientes();   // 🟡 luego cargar solicitudes
-    guardarContactosActuales();       // 🔴 al final, guardar si hay cambios
+    cargarContactosGuardados();
+    cargarSolicitudesPendientes();
+    guardarContactosActuales();
 
     contentStack->setCurrentIndex(0);
     estadoTimer = new QTimer(this);
     connect(estadoTimer, &QTimer::timeout, this, &ChatWindow::verificarEstadosDesdeArchivo);
-    estadoTimer->start(1000);  // cada 1 segundo
+    estadoTimer->start(1000);
 
     solicitudesTimer = new QTimer(this);
     connect(solicitudesTimer, &QTimer::timeout, this, &ChatWindow::verificarSolicitudesDesdeArchivo);
-    solicitudesTimer->start(1000);  // cada segundo
+    solicitudesTimer->start(1000);
 
     contactosTimer = new QTimer(this);
     connect(contactosTimer, &QTimer::timeout, this, &ChatWindow::cargarContactosGuardados);
-    contactosTimer->start(1500);  // cada 1.5 segundos
+    contactosTimer->start(1500);
 
     solicitudesListTimer = new QTimer(this);
     connect(solicitudesListTimer, &QTimer::timeout, this, [=]() {
@@ -847,13 +831,12 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
 
     mensajesNoLeidosTimer = new QTimer(this);
     connect(mensajesNoLeidosTimer, &QTimer::timeout, this, &ChatWindow::verificarMensajesNoLeidos);
-    mensajesNoLeidosTimer->start(1000); // Cada segundo
+    mensajesNoLeidosTimer->start(1000);
 
     notificacionesTimer = new QTimer(this);
     connect(notificacionesTimer, &QTimer::timeout, this, &ChatWindow::verificarNotificaciones);
     notificacionesTimer->start(1000);
 
-    // Mostrar solo la vista de chats al inicio
     contactList->setVisible(true);
     solicitudesList->setVisible(false);
     solicitudesLabel->setVisible(false);
@@ -861,15 +844,15 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
     solicitudesButton->setChecked(false);
 
     connect(chatButton, &QPushButton::clicked, this, [=]() {
-        mostrarPantallaBienvenida();                      // Muestra el avatar y texto
-        contactList->setVisible(true);                    // Muestra contactos
-        solicitudesList->setVisible(false);               // Oculta solicitudes
+        mostrarPantallaBienvenida();
+        contactList->setVisible(true);
+        solicitudesList->setVisible(false);
         solicitudesLabel->setVisible(false);
-        contentStack->setCurrentIndex(0);                 // Bienvenida/chat
+        contentStack->setCurrentIndex(0);
     });
 
     connect(settingsButton, &QPushButton::clicked, this, [=]() {
-        contentStack->setCurrentIndex(1);                 // Configuración
+        contentStack->setCurrentIndex(1);
         contactList->setVisible(false);
     });
 
@@ -878,7 +861,6 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
         if (dialog.exec() == QDialog::Accepted) {
             QString seleccionado = dialog.getSeleccionado();
             if (!seleccionado.isEmpty()) {
-                // Verifica si ya está en la lista visual
                 for (int i = 0; i < contactList->count(); ++i) {
                     QListWidgetItem *item = contactList->item(i);
                     if (item && item->data(Qt::UserRole).toString() == seleccionado) {
@@ -887,7 +869,6 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
                     }
                 }
 
-                // Enviar solicitud si no ha sido enviada antes
                 for (const Usuario &u : usuariosTotales) {
                     if (u.getUsuario() == seleccionado) {
                         QString archivoSolicitud = "/Users/anavalle/Desktop/chat/solicitudes/solicitudes_" + u.getUsuario() + ".txt";
@@ -962,14 +943,11 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
                 archivo.close();
             }
 
-            // ✅ 5. Si el contacto eliminado es el que está abierto, cerrar chat y mostrar pantalla neutral
             if (chatWidget && contacto == chatWidget->getContactoActual()) {
-                // Cerrar y eliminar chat activo
                 chatHomeScreen->layout()->removeWidget(chatWidget);
                 chatWidget->deleteLater();
                 chatWidget = nullptr;
 
-                // Mostrar pantalla de bienvenida
                 if (logoHome) logoHome->setVisible(true);
                 if (welcomeText) welcomeText->setVisible(false);
                 if (welcomeWidget) welcomeWidget->setVisible(true);
@@ -995,16 +973,15 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
         chatButton->setChecked(false);
         solicitudesButton->setChecked(true);
 
-        cargarSolicitudesPendientes();  // solo aquí se cargan visualmente
+        cargarSolicitudesPendientes();
         contentStack->setCurrentIndex(0);
     });
 
-    // ... dentro de tu función donde conectas el click de los contactos ...
     connect(contactList, &QListWidget::itemClicked, this, [=](QListWidgetItem *item) {
         QString usuarioSeleccionado = item->data(Qt::UserRole).toString();
         QString avatarSeleccionado;
 
-        // Buscar el avatar del usuario seleccionado
+
         for (const Usuario &u : usuariosTotales) {
             if (u.getUsuario() == usuarioSeleccionado) {
                 avatarSeleccionado = u.getAvatar();
@@ -1012,14 +989,12 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
             }
         }
 
-        // Elimina el widget de chat anterior si existe
         if (chatWidget) {
             chatHomeScreen->layout()->removeWidget(chatWidget);
             chatWidget->deleteLater();
             chatWidget = nullptr;
         }
 
-        // Crea un nuevo widget de chat
         chatWidget = new ChatScreen(this);
         chatWidget->setUsuarioActual(usuario.getUsuario());
         chatWidget->setContacto(usuarioSeleccionado, avatarSeleccionado);
@@ -1027,7 +1002,6 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
         chatWidget->cargarMensajesDesdeArchivo();
 
         connect(chatWidget, &ChatScreen::eliminarContacto, this, [=](const QString &contacto) {
-            // Eliminar contacto visualmente
             for (int i = 0; i < contactList->count(); ++i) {
                 QListWidgetItem *item = contactList->item(i);
                 if (item->data(Qt::UserRole).toString() == contacto) {
@@ -1038,13 +1012,11 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
 
             guardarContactosActuales();
 
-            // 🗑️ Eliminar historial de chat
             QString rutaChat = ChatScreen::nombreArchivoChat(usuario.getUsuario(), contacto);
             if (QFile::exists(rutaChat)) {
-                QFile::remove(rutaChat);  // ✅ Esto elimina "ana_cris.txt", "ana_monic.txt", etc.
+                QFile::remove(rutaChat);
             }
 
-            // 💾 Registrar eliminación para el otro usuario
             QString archivoRuta = "/Users/anavalle/Desktop/chat/eliminados/eliminados_" + contacto + ".txt";
             QFile archivo(archivoRuta);
             if (archivo.open(QIODevice::Append | QIODevice::Text)) {
@@ -1053,7 +1025,7 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
                 archivo.close();
             }
 
-            // Ocultar vista del chat
+
             if (chatWidget) {
                 chatHomeScreen->layout()->removeWidget(chatWidget);
                 chatWidget->deleteLater();
@@ -1064,25 +1036,22 @@ ChatWindow::ChatWindow(const Usuario &usuarioActivo, ClienteSocket* socket, QWid
             if (welcomeWidget) welcomeWidget->setVisible(true);
         });
 
-        // Oculta la vista de bienvenida (avatar grande)
+
         if (welcomeWidget) {
             welcomeWidget->setVisible(false);
         }
 
-        // ❌ Botón "X" de cerrar (parte superior derecha del header)
         QPushButton *btnCerrarChat = new QPushButton("✖", chatWidget);
         btnCerrarChat->setFixedSize(30, 30);
         btnCerrarChat->setCursor(Qt::PointingHandCursor);
         btnCerrarChat->setStyleSheet("border: none; color: #800020; font-size: 18px; font-weight: bold;");
 
-        // Insertar la "X" al header layout del chat
         QHBoxLayout *headerLayout = chatWidget->findChild<QHBoxLayout*>();
         if (headerLayout) {
             headerLayout->addStretch();
             headerLayout->addWidget(btnCerrarChat);
         }
 
-        // Acción al presionar la "X"
         connect(btnCerrarChat, &QPushButton::clicked, this, [=]() {
             if (chatWidget) {
                 chatHomeScreen->layout()->removeWidget(chatWidget);
@@ -1109,7 +1078,7 @@ void ChatWindow::cargarUsuariosDesdeArchivo() {
     QFile file("/Users/anavalle/Desktop/chat/usuarios.txt");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
-        usuariosTotales.clear(); // Limpia antes de recargar
+        usuariosTotales.clear();
 
         while (!in.atEnd()) {
             QString linea = in.readLine().trimmed();
@@ -1164,15 +1133,14 @@ void ChatWindow::guardarContactosActuales() {
 
         for (int i = 0; i < contactList->count(); ++i) {
             QListWidgetItem *item = contactList->item(i);
-            QString usuarioVisual = item->data(Qt::UserRole).toString().trimmed();        // Conserva casing original
-            QString usuarioComparar = usuarioVisual.toLower();                            // Para comparación
+            QString usuarioVisual = item->data(Qt::UserRole).toString().trimmed();
+            QString usuarioComparar = usuarioVisual.toLower();
 
             if (!usuarioComparar.isEmpty()) {
                 qDebug() << "🔍 Buscando datos del usuario (comparación):" << usuarioComparar;
 
                 for (const Usuario &u : usuariosTotales) {
                     if (u.getUsuario().toLower() == usuarioComparar) {
-                        // Guardamos con el casing original del registro
                         QString linea = u.getUsuario() + "," + u.getNombre() + "," + u.getAvatar();
                         out << linea << "\n";
                         qDebug() << "✅ Guardado:" << linea;
@@ -1210,7 +1178,6 @@ void ChatWindow::cargarContactosGuardados() {
 
                 qDebug() << "🧾 Contacto leído:" << linea;
 
-                // Verificar si ya está en la lista
                 bool yaExiste = false;
                 for (int i = 0; i < contactList->count(); ++i) {
                     QListWidgetItem *item = contactList->item(i);
@@ -1222,7 +1189,6 @@ void ChatWindow::cargarContactosGuardados() {
                 }
                 if (yaExiste) continue;
 
-                // === Crear widget visual ===
                 QWidget *itemWidget = new QWidget();
                 itemWidget->setStyleSheet(R"(
     background-color: transparent;
@@ -1255,12 +1221,10 @@ void ChatWindow::cargarContactosGuardados() {
                 textLayout->setContentsMargins(0, 0, 0, 0);
                 textLayout->setSpacing(2);
 
-                // 🧾 Nombre
                 QLabel *userLabel = new QLabel(nombreGuardado);
                 userLabel->setStyleSheet("font-weight: bold; font-size: 15px; color: #333;");
                 userLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-                // 🟢 Estado
                 QLabel *estadoLabel = new QLabel();
                 estadoLabel->setObjectName("estadoLabel");
                 QString estado = obtenerEstadoDesdeArchivo(usuarioGuardado);
@@ -1272,7 +1236,6 @@ void ChatWindow::cargarContactosGuardados() {
                     estadoLabel->setStyleSheet("color: gray; font-size: 13px;");
                 }
 
-                // 📌 Contenedor horizontal: Nombre + Estado
                 QWidget *filaSuperior = new QWidget();
                 QHBoxLayout *filaLayout = new QHBoxLayout(filaSuperior);
                 filaLayout->setContentsMargins(0, 0, 0, 0);
@@ -1280,12 +1243,12 @@ void ChatWindow::cargarContactosGuardados() {
                 filaLayout->addWidget(estadoLabel);
                 filaLayout->addStretch();
 
-                // 📨 Último mensaje
+
                 QLabel *ultimoMensajeLabel = new QLabel(" ");
                 ultimoMensajeLabel->setObjectName("ultimoMensajeLabel");
                 ultimoMensajeLabel->setStyleSheet("color: #666; font-size: 13px;");
 
-                // 📂 Leer último mensaje desde archivo
+
                 QString rutaChat = ChatScreen::nombreArchivoChat(usuario.getUsuario(), usuarioGuardado);
                 QFile archivoChat(rutaChat);
                 QString ultimoMensaje = "";
@@ -1316,8 +1279,7 @@ void ChatWindow::cargarContactosGuardados() {
                     }
                 }
 
-                // 🔴 Contador de no leídos
-                // 🔴 Contador de no leídos
+
                 QLabel *contadorLabel = new QLabel("");
                 contadorLabel->setObjectName("contadorLabel");
                 contadorLabel->setStyleSheet("background-color: green; color: white; font-size: 12px; padding: 2px 6px; border-radius: 10px;");
@@ -1332,7 +1294,7 @@ void ChatWindow::cargarContactosGuardados() {
                     contadorLabel->setVisible(true);
                 }
 
-                // ✅ Registrar el contador en el mapa
+
                 contadoresNoLeidos[usuarioGuardado.toLower()] = contadorLabel;
 
                 textLayout->addWidget(filaSuperior);
@@ -1349,8 +1311,7 @@ void ChatWindow::cargarContactosGuardados() {
                 item->setData(Qt::UserRole + 1, QVariant::fromValue<void*>(ultimoMensajeLabel));
                 item->setData(Qt::UserRole + 2, QVariant::fromValue<void*>(contadorLabel));
 
-                // 🔵 Notificaciones visuales
-                // 🔵 Notificaciones visuales estilo burbuja
+
                 QMap<QString, int> notificaciones = GestorNotificaciones::leerNotificaciones(usuario.getUsuario());
                 if (notificaciones.contains(usuarioGuardado) && notificaciones[usuarioGuardado] > 0) {
                     QLabel* lblNotificacion = new QLabel(QString::number(notificaciones[usuarioGuardado]));
@@ -1364,12 +1325,11 @@ void ChatWindow::cargarContactosGuardados() {
         border-radius: 12px;
     )");
 
-                    // 📦 Layout vertical para ubicar la burbuja correctamente (arriba derecha)
                     QVBoxLayout *bubbleLayout = new QVBoxLayout();
                     bubbleLayout->setContentsMargins(0, 0, 0, 0);
                     bubbleLayout->addWidget(lblNotificacion, 0, Qt::AlignRight);
 
-                    itemLayout->addLayout(bubbleLayout);  // 📌 Agrega a la derecha
+                    itemLayout->addLayout(bubbleLayout);
                 }
 
                 contactList->addItem(item);
@@ -1395,7 +1355,7 @@ void ChatWindow::cargarSolicitudesPendientes() {
     QFile file(archivoRuta);
     if (!file.exists()) return;
 
-    solicitudesList->clear(); // Limpia solicitudes anteriores
+    solicitudesList->clear();
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
@@ -1420,7 +1380,6 @@ void ChatWindow::cargarSolicitudesPendientes() {
 
                 if (yaAgregado) continue;
 
-                // === Diseño visual del item ===
                 QFrame *itemWidget = new QFrame();
                 itemWidget->setStyleSheet("QFrame { background: #fff; border: 1px solid #ddd; border-radius: 10px; }");
                 QHBoxLayout *layout = new QHBoxLayout(itemWidget);
@@ -1463,17 +1422,17 @@ void ChatWindow::cargarSolicitudesPendientes() {
                 solicitudesList->addItem(item);
                 solicitudesList->setItemWidget(item, itemWidget);
 
-                // ✅ Botón ACEPTAR
+
                 connect(aceptarBtn, &QPushButton::clicked, this, [=]() {
                     agregarContactoMutuo(userSolicitud);
                     eliminarSolicitud(userSolicitud);
                     solicitudesList->takeItem(solicitudesList->row(item));
 
-                    // 🔁 Actualizar contador con nueva clase
+
                     int pendientes = GestorVistaChat::contarSolicitudes(usuario.getUsuario(), contactList);
                     solicitudesButton->setText(pendientes > 0 ? QString("🔔 %1").arg(pendientes) : "🔔");
 
-                    // 🔴 Eliminar de eliminados
+
                     QString rutaEliminados = "/Users/anavalle/Desktop/chat/eliminados/eliminados_" + usuario.getUsuario() + ".txt";
                     QFile archivo(rutaEliminados);
                     QStringList lineasLimpias;
@@ -1494,12 +1453,12 @@ void ChatWindow::cargarSolicitudesPendientes() {
                     }
                 });
 
-                // ❌ Botón RECHAZAR
+
                 connect(rechazarBtn, &QPushButton::clicked, this, [=]() {
                     eliminarSolicitud(userSolicitud);
                     solicitudesList->takeItem(solicitudesList->row(item));
 
-                    // 🔁 Actualizar contador con nueva clase
+
                     int pendientes = GestorVistaChat::contarSolicitudes(usuario.getUsuario(), contactList);
                     solicitudesButton->setText(pendientes > 0 ? QString("🔔 %1").arg(pendientes) : "🔔");
                 });
@@ -1508,7 +1467,7 @@ void ChatWindow::cargarSolicitudesPendientes() {
         file.close();
     }
 
-    // 🔁 Actualiza contador una vez más al final
+
     int pendientes = GestorVistaChat::contarSolicitudes(usuario.getUsuario(), contactList);
     solicitudesButton->setText(pendientes > 0 ? QString("🔔 %1").arg(pendientes) : "🔔");
 }
@@ -1521,11 +1480,10 @@ void ChatWindow::agregarContactoMutuo(const QString &otroUsuario) {
             for (int i = 0; i < contactList->count(); ++i) {
                 QString existente = contactList->item(i)->data(Qt::UserRole).toString();
                 if (!existente.isEmpty() && existente.toLower() == otroLower) {
-                    return; // Ya está agregado (sin importar casing)
+                    return;
                 }
             }
 
-            // ✅ Elimina al usuario del archivo de eliminados (si existía)
             QString archivoEliminado = "/Users/anavalle/Desktop/chat/eliminados/eliminados_" + usuario.getUsuario() + ".txt";
             QFile file(archivoEliminado);
             QStringList lineas;
@@ -1548,7 +1506,7 @@ void ChatWindow::agregarContactoMutuo(const QString &otroUsuario) {
                 file.close();
             }
 
-            // 🔁 Crear el widget visual usando la función reutilizable
+
             QLabel* ultimoLabel = nullptr;
             QLabel* contadorLabel = nullptr;
 
@@ -1556,7 +1514,7 @@ void ChatWindow::agregarContactoMutuo(const QString &otroUsuario) {
                 u, usuario.getUsuario(), ultimoLabel, contadorLabel
                 );
 
-            // 🔁 Aplicar el mismo diseño visual aquí directamente
+
             itemWidget->setStyleSheet(R"(
     background-color: transparent;
     border: none;
@@ -1579,13 +1537,13 @@ void ChatWindow::agregarContactoMutuo(const QString &otroUsuario) {
             contactList->addItem(item);
             contactList->setItemWidget(item, itemWidget);
 
-            // Registrar contador en el mapa
+
             contadoresNoLeidos[u.getUsuario().toLower()] = contadorLabel;
 
-            // ✅ Guardar contacto en archivo local
+
             guardarContactosActuales();
 
-            // ✅ Agregar al archivo del otro usuario
+
             QString archivoOtro = "/Users/anavalle/Desktop/chat/contactos/contactos_" + u.getUsuario() + ".txt";
             QFile file2(archivoOtro);
             if (file2.open(QIODevice::Append | QIODevice::Text)) {
@@ -1658,7 +1616,7 @@ void ChatWindow::actualizarEstadosEnLista(const QMap<QString, QString>& estados)
             continue;
         }
 
-        QString estado = estados.value(username, "0").trimmed(); // ← Asumimos 0 si no hay dato
+        QString estado = estados.value(username, "0").trimmed();
 
         if (estado == "1") {
             estadoLabel->setText("🟢 ");
@@ -1677,27 +1635,26 @@ void ChatWindow::actualizarEstadosEnLista(const QMap<QString, QString>& estados)
 QString ChatWindow::obtenerEstadoDesdeArchivo(const QString& usuario) {
     QFile archivo("/Users/anavalle/Desktop/chat/usuarios.txt");
     if (!archivo.open(QIODevice::ReadOnly | QIODevice::Text))
-        return "0";  // Por defecto, desconectado
+        return "0";
 
     QTextStream in(&archivo);
     while (!in.atEnd()) {
         QString linea = in.readLine().trimmed();
         QStringList partes = linea.split(",");
         if (partes.size() >= 9 && partes[0].trimmed() == usuario.trimmed()) {
-            return partes[8].trimmed();  // "1" o "0"
+            return partes[8].trimmed();
         }
     }
 
-    return "0";  // Usuario no encontrado → se asume desconectado
+    return "0";
 }
 
 void ChatWindow::cerrarSesion() {
-    // ✅ Enviar mensaje de desconexión al servidor (DESCONECTADO:<usuario>)
+
     if (clienteSocket) {
-        clienteSocket->desconectar();  // Método dedicado para cerrar correctamente
+        clienteSocket->desconectar();
     }
 
-    // ✅ Actualizar estado en archivo a "0" (desconectado)
     QString archivoRuta = "/Users/anavalle/Desktop/chat/usuarios.txt";
     QFile file(archivoRuta);
 
@@ -1710,7 +1667,7 @@ void ChatWindow::cerrarSesion() {
             QStringList partes = linea.split(",");
 
             if (partes.size() >= 9 && partes[0].trimmed() == usuario.getUsuario()) {
-                partes[8] = "0";  // Estado desconectado
+                partes[8] = "0";
                 linea = partes.join(",");
                 qDebug() << "✅ Línea modificada:" << linea;
             }
@@ -1734,7 +1691,7 @@ void ChatWindow::cerrarSesion() {
         qDebug() << "❌ No se pudo abrir archivo para lectura.";
     }
 
-    // 🧭 Volver a ventana de login
+
     loginWindow = new LoginWindow();
     loginWindow->show();
     this->close();
@@ -1754,19 +1711,17 @@ void ChatWindow::verificarEstadosDesdeArchivo() {
         QStringList partes = linea.split(",");
         if (partes.size() >= 9) {
             QString usuario = partes[0].trimmed();
-            QString estado = partes[8].trimmed();  // "1" o "0"
+            QString estado = partes[8].trimmed();
             mapaEstados[usuario] = estado;
         }
     }
     file.close();
 
-    // Llama a tu método actual que actualiza los estados visuales
     actualizarEstadosEnLista(mapaEstados);
 }
 
 void ChatWindow::mostrarPantallaBienvenida() {
-    // Mostrar mensaje de bienvenida
-    contentStack->setCurrentIndex(0); // asume que el index 0 es welcomeWidget
+    contentStack->setCurrentIndex(0);
 }
 void ChatWindow::verificarSolicitudesDesdeArchivo() {
     QString archivoRuta = "/Users/anavalle/Desktop/chat/solicitudes/solicitudes_" + usuario.getUsuario() + ".txt";
@@ -1782,7 +1737,7 @@ void ChatWindow::verificarSolicitudesDesdeArchivo() {
                 if (partes.size() >= 3) {
                     QString userSolicitud = partes[0].toLower();
 
-                    // Verificar si ya fue agregado
+
                     bool yaAgregado = false;
                     for (int i = 0; i < contactList->count(); ++i) {
                         QString existente = contactList->item(i)->data(Qt::UserRole).toString().toLower();
@@ -1801,10 +1756,9 @@ void ChatWindow::verificarSolicitudesDesdeArchivo() {
         file.close();
     }
 
-    // ✅ Mostrar solo el contador en el botón (sin abrir la vista)
+
     solicitudesButton->setText(contador > 0 ? QString("🔔 %1").arg(contador) : "🔔");
 
-    // Si estás en modo solicitudes, actualiza el texto también
     if (enModoSolicitudes) {
         solicitudesLabel->setText(QString("🔔 Solicitudes (%1)").arg(contador));
     }
@@ -1847,10 +1801,9 @@ void ChatWindow::actualizarUltimoMensaje(const QString& contacto, const QString&
 void ChatWindow::limpiarContador(const QString& contacto) {
     QString clave = contacto.toLower();
 
-    // 1. Limpiar mensajes no leídos
+
     mensajesNoLeidos[clave].limpiar();
 
-    // 2. Ocultar contador visual
     if (contadoresNoLeidos.contains(clave)) {
         QLabel* label = contadoresNoLeidos[clave];
         label->clear();
@@ -1863,7 +1816,7 @@ void ChatWindow::registrarMensajeNoLeido(const QString& contacto, const QString&
 
     mensajesNoLeidos[clave].encolar(mensaje);
 
-    // 🔵 Aumentar contador de notificaciones
+
     GestorNotificaciones::incrementar(usuario.getUsuario(), contacto);
 
     actualizarContador(contacto);
@@ -1893,13 +1846,13 @@ void ChatWindow::verificarActualizacionArchivo() {
             archivo.close();
         }
 
-        // Determinar prefijo
+
         QString prefijo = "";
         if (ultimo.startsWith(usuario.getUsuario() + " ")) {
             prefijo = "Tú: ";
         }
 
-        // Extraer contenido con expresión regular
+
         QRegularExpression re(R"((.+?)\s+\[\d{2}:\d{2}\]:\s+(.*))");
         QRegularExpressionMatch match = re.match(ultimo);
         if (match.hasMatch()) {
@@ -1987,7 +1940,6 @@ void ChatWindow::eliminarCuenta(const QString &usuarioEliminar) {
     // 3. Eliminar archivo de solicitudes propias
     QFile::remove("/Users/anavalle/Desktop/chat/solicitudes/solicitudes_" + usuarioEliminar + ".txt");
 
-    // 🔴 4. Eliminar al usuario de las solicitudes de otros usuarios
     QDir dirSolicitudes("/Users/anavalle/Desktop/chat/solicitudes");
     QStringList archivosSolicitudes = dirSolicitudes.entryList(QStringList() << "solicitudes_*.txt", QDir::Files);
 
@@ -2014,7 +1966,6 @@ void ChatWindow::eliminarCuenta(const QString &usuarioEliminar) {
         }
     }
 
-    // 5. Eliminar archivo de mensajes y leídos
     QDir mensajes("/Users/anavalle/Desktop/chat/mensajes");
     QDir leidos("/Users/anavalle/Desktop/chat/leidos");
     QStringList archivosMensajes = mensajes.entryList(QStringList() << "*" + usuarioEliminar + "*.txt", QDir::Files);
@@ -2025,7 +1976,6 @@ void ChatWindow::eliminarCuenta(const QString &usuarioEliminar) {
     for (const QString &archivo : archivosLeidos)
         leidos.remove(archivo);
 
-    // 6. Eliminar al usuario de los contactos de otros usuarios
     QDir dirContactos("/Users/anavalle/Desktop/chat/contactos");
     QStringList archivos = dirContactos.entryList(QStringList() << "contactos_*.txt", QDir::Files);
 
@@ -2147,7 +2097,6 @@ void ChatWindow::verificarNotificaciones() {
                 border-radius: 12px;
             )");
 
-            // 📌 Agrega visualmente a la derecha del layout (como burbuja flotante)
             QLayout* layout = widget->layout();
             if (layout) {
                 QVBoxLayout* extra = new QVBoxLayout();

@@ -19,7 +19,6 @@ LoginWindow::LoginWindow(QWidget *parent)
     setFixedSize(800, 650);
     setStyleSheet("background-color: #1e1e1e; color: black;");
 
-    // --- BIENVENIDA ---
     QFrame *contenedor = new QFrame(this);
     contenedor->setFixedSize(800, 650);
     contenedor->move((width() - contenedor->width()) / 2, (height() - contenedor->height()) / 2);
@@ -56,7 +55,6 @@ LoginWindow::LoginWindow(QWidget *parent)
     layout->addSpacing(10);
     layout->addWidget(continuarButton, 0, Qt::AlignHCenter);
 
-    // --- LOGIN ---
     loginFrame = new QFrame(this);
     loginFrame->setFixedSize(800, 650);
     loginFrame->move(0, 0);
@@ -113,7 +111,6 @@ LoginWindow::LoginWindow(QWidget *parent)
                                                 datos[4], datos[5].toInt(), datos[6], datos[7]);
                         loginExitoso = true;
 
-                        // ✅ Actualiza el estado a 1 en el archivo
                         QFile updateFile(rutaUsuarios);
                         if (updateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
                             QStringList lineas;
@@ -195,7 +192,6 @@ LoginWindow::LoginWindow(QWidget *parent)
     loginLayout->addWidget(iniciarButton);
     loginLayout->addWidget(registroButton);
 
-    // --- REGISTRO ---
     crearFormularioRegistro();
 }
 
@@ -210,7 +206,6 @@ void LoginWindow::crearFormularioRegistro() {
     panelRegistro->setFixedSize(500, 600);
     panelRegistro->setStyleSheet("background-color: #fefefe; border-radius: 20px; color: black;");
 
-    // ✅ Este layout centrará el panelRegistro dentro de registroFrame
     QVBoxLayout *frameLayout = new QVBoxLayout(registroFrame);
     frameLayout->setAlignment(Qt::AlignCenter);
     frameLayout->addWidget(panelRegistro);
@@ -381,7 +376,6 @@ void LoginWindow::crearFormularioRegistro() {
             return;
         }
 
-        // Validar correo
         if (!correoText.contains("@") || !correoText.contains(".")) {
             QMessageBox msgBox;
             msgBox.setWindowTitle("Correo inválido");
@@ -412,7 +406,6 @@ void LoginWindow::crearFormularioRegistro() {
             return;
         }
 
-        // Validar contraseñas coinciden
         if (passText != passConfText) {
             QMessageBox msgBox;
             msgBox.setWindowTitle("Contraseña no coincide");
@@ -474,7 +467,6 @@ void LoginWindow::crearFormularioRegistro() {
             msgBox.exec();
             return;
         }
-        // Validar edad
         bool ok;
         int edadInt = edadText.toInt(&ok);
         if (!ok || edadInt < 13) {
@@ -507,7 +499,6 @@ void LoginWindow::crearFormularioRegistro() {
             return;
         }
 
-        // Validar que usuario no exista
         if (Usuario::existeUsuario(QDir::currentPath() + "/usuarios.txt", usuarioText)) {
             QMessageBox msgBox;
             msgBox.setWindowTitle("Usuario existente");
@@ -538,7 +529,6 @@ void LoginWindow::crearFormularioRegistro() {
             return;
         }
 
-        // Crear y guardar usuario
         Usuario nuevoUsuario(
             usuarioText,
             nombreText,
@@ -548,7 +538,7 @@ void LoginWindow::crearFormularioRegistro() {
             edadInt,
             preguntaText,
             respuestaText,
-               false  // 👈 explícito
+               false
             );
 
         if (nuevoUsuario.guardarEnArchivo(QDir::currentPath() + "/usuarios.txt")) {
@@ -580,7 +570,6 @@ void LoginWindow::crearFormularioRegistro() {
 )");
             msgBox.exec();
 
-            // 👉 Abrir chat directamente con el nuevo usuario
             abrirChatConUsuario(nuevoUsuario);
 
         } else {
@@ -657,9 +646,8 @@ void LoginWindow::cerrarRegistro() {
 }
 void LoginWindow::abrirChatConUsuario(const Usuario &usuario)
 {
-    this->hide(); // Oculta ventana actual (registro o login)
+    this->hide();
 
-    // 🔁 Actualizar estado a 1 en usuarios.txt
     QString rutaUsuarios = "/Users/anavalle/Desktop/chat/usuarios.txt";
     QFile file(rutaUsuarios);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -669,7 +657,7 @@ void LoginWindow::abrirChatConUsuario(const Usuario &usuario)
             QString l = in.readLine();
             QStringList partes = l.split(",");
             if (partes.size() >= 9 && partes[0] == usuario.getUsuario()) {
-                partes[8] = "1"; // Estado conectado
+                partes[8] = "1";
                 lineas << partes.join(",");
             } else {
                 lineas << l;
@@ -685,7 +673,6 @@ void LoginWindow::abrirChatConUsuario(const Usuario &usuario)
         }
     }
 
-    // Conexión del socket y apertura del chat
     ClienteSocket* socket = new ClienteSocket(this);
     socket->setNombreUsuario(usuario.getUsuario());
     socket->conectarServidor("127.0.0.1", 12345);

@@ -19,7 +19,7 @@ public:
 private slots:
     void onSearchTextChanged(const QString &text);
     void onAddClicked();
-    void updateSelectionStyle(); // << 👈 Aquí ya declarada correctamente
+    void updateSelectionStyle();
 
 private:
     void populateUserList(const QString &filter);
@@ -31,4 +31,4 @@ private:
     QString usuarioSeleccionado;
 };
 
-#endif // AGREGARCONTACTODIALOG_H
+#endif
